@@ -1,40 +1,51 @@
-# Python virtual environments
-venv/
-env/
-ENV/
-
-# Python cache files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Distribution / packaging
-dist/
+*.so
+.Python
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
 *.egg-info/
+.installed.cfg
+*.egg
 
-# IDE specific files
+# Environment variables
+.env
+.env.*
+!.env.example
+.venv
+env/
+venv/
+ENV/
+
+# IDE
 .idea/
 .vscode/
 *.swp
 *.swo
 
-# Environment files
-.env
-.env.*
-!.env.example
+# Secrets and keys
+*.pem
+*.key
+*_rsa
+*.pub
+secrets.yaml
+secrets.yml
+credentials.json
+token.json
+.secrets/
 
 # Logs
 *.log
-
-# Test coverage
-.coverage
-htmlcov/
-
-# Local development settings
-local_settings.py
-
-# Temporary files
-*.tmp
-*.temp
-.DS_Store
+logs/

@@ -1,10 +1,22 @@
-# Environment variable references (safe to commit)
-MY_API_KEY="\${MY_API_KEY}"
+# Example patterns that are allowed (won't trigger git-secrets)
+# Format: regex patterns, one per line
 
-# Common false positives in code
-# Add your patterns here, for example:
-# self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-# self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+# Example API endpoint URLs (not keys)
+https?://api\.example\.com/v[0-9]+/
+https?://localhost:[0-9]+/
 
-# Allow any tokenizer references in code
-.*tokenizer.*
+# Example placeholder/template values
+PLACEHOLDER_API_KEY
+YOUR_API_KEY_HERE
+YOUR_SECRET_HERE
+CHANGEME_API_KEY
+CHANGEME_SECRET
+
+# Test/example credentials in documentation
+example_password
+test_password
+dummy_secret
+
+# Common code patterns that might look like secrets
+Bearer\s+\$\{[A-Za-z_][A-Za-z0-9_]*\}  # Template literal in code
+\$\{[A-Za-z_][A-Za-z0-9_]*_API_KEY\}   # Environment variable reference
