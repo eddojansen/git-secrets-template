@@ -11,40 +11,24 @@ if ! command -v git-secrets &> /dev/null; then
 fi
 
 # Initialize git-secrets in the repository
-git secrets --install
+git secrets --install -f
+
+# First clean any existing patterns
+git config --unset-all secrets.patterns || true
+git config --unset-all secrets.allowed || true
+
+# Register AWS patterns
 git secrets --register-aws
 
 # Add common patterns for API keys and secrets
-git secrets --add 'private_key'
-git secrets --add 'private.*key'
-git secrets --add 'secret.*key'
-git secrets --add '[a-zA-Z0-9_-]*token[a-zA-Z0-9_-]*'
-git secrets --add '[a-zA-Z0-9_-]*password[a-zA-Z0-9_-]*'
-git secrets --add '[a-zA-Z0-9_-]*secret[a-zA-Z0-9_-]*'
-git secrets --add '-----BEGIN.*PRIVATE KEY-----'
-git secrets --add '-----BEGIN.*RSA PRIVATE KEY-----'
-git secrets --add '[A-Z0-9]{20}'  # Generic API key pattern
-git secrets --add '[0-9a-f]{32}'  # MD5 hash pattern
-git secrets --add '[0-9a-f]{40}'  # SHA1 hash pattern
-git secrets --add '(?i)api[_-]?key'
-git secrets --add '(?i)auth[_-]?token'
-
-# Add patterns for specific service API keys
-git secrets --add 'AIza[0-9A-Za-z-_]{35}'  # Google API Key
-git secrets --add 'sk-[0-9a-zA-Z]{48}'     # OpenAI API Key
-git secrets --add '[A-Z0-9]{20}'           # AWS Access Key
-git secrets --add 'ghp_[a-zA-Z0-9]{36}'    # GitHub Personal Access Token
-git secrets --add 'xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9]{12}-[a-zA-Z0-9]{32}' # Slack Token
-
-# Load allowed patterns from .gitallowed if it exists
-if [ -f .gitallowed ]; then
-    while IFS= read -r pattern || [ -n "$pattern" ]; do
-        # Skip comments and empty lines
-        [[ $pattern =~ ^[[:space:]]*# ]] && continue
-        [[ -z "${pattern// }" ]] && continue
-        git secrets --add --allowed "$pattern"
-    done < .gitallowed
-fi
+git secrets --add 'sk-[a-zA-Z0-9]{48}'  # OpenAI API key pattern
+git secrets --add '[a-zA-Z0-9_-]*api_key[a-zA-Z0-9_-]*=[a-zA-Z0-9_-]*'  # Generic API key pattern
+git secrets --add '[a-zA-Z0-9_-]*password[a-zA-Z0-9_-]*=[a-zA-Z0-9_-]*'  # Password pattern
+git secrets --add '[a-zA-Z0-9_-]*secret[a-zA-Z0-9_-]*=[a-zA-Z0-9_-]*'   # Secret pattern
+git secrets --add '[a-zA-Z0-9_-]*token[a-zA-Z0-9_-]*=[a-zA-Z0-9_-]*'    # Token pattern
+git secrets --add 'ghp_[a-zA-Z0-9]{36}'  # GitHub token pattern
+git secrets --add 'xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9]{12}-[a-zA-Z0-9]{32}'  # Slack token pattern
+git secrets --add 'AIza[0-9A-Za-z-_]{35}'  # Google API key pattern
 
 # Set up pre-commit hook
 cat > .git/hooks/pre-commit << 'EOF'
@@ -73,6 +57,16 @@ fi
 EOF
 
 chmod +x .git/hooks/pre-commit
+
+# Load allowed patterns from .gitallowed if it exists
+if [ -f .gitallowed ]; then
+    while IFS= read -r pattern || [ -n "$pattern" ]; do
+        # Skip comments and empty lines
+        [[ $pattern =~ ^[[:space:]]*# ]] && continue
+        [[ -z "${pattern// }" ]] && continue
+        git secrets --add --allowed "$pattern"
+    done < .gitallowed
+fi
 
 echo "Git secrets setup complete! The repository is now protected against committing secrets."
 echo "Remember to:"
