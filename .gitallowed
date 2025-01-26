@@ -1,0 +1,10 @@
+# Environment variable references (safe to commit)
+MY_API_KEY="\${MY_API_KEY}"
+
+# Common false positives in code
+# Add your patterns here, for example:
+# self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+# self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+# Allow any tokenizer references in code
+.*tokenizer.*
