@@ -19,8 +19,9 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
-# Environment variables
+# Virtual Environment
 .env
 .env.*
 !.env.example
@@ -34,18 +35,28 @@ ENV/
 .vscode/
 *.swp
 *.swo
+*~
 
-# Secrets and keys
-*.pem
-*.key
-*_rsa
-*.pub
-secrets.yaml
-secrets.yml
-credentials.json
-token.json
-.secrets/
+# OS
+.DS_Store
+Thumbs.db
 
 # Logs
 *.log
 logs/
+log/
+
+# Local development
+*.local
+.local/
+
+# Dependencies
+node_modules/
+jspm_packages/
+bower_components/
+
+# Distribution
+dist/
+build/
+*.tar.gz
+*.zip

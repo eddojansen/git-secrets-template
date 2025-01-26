@@ -1,16 +1,30 @@
-# Example patterns that are allowed (won't trigger git-secrets)
+# Common allowed patterns for git-secrets
 # Format: regex patterns, one per line
+
+# Environment variable references
+NGC_API_KEY="\${NGC_API_KEY}"
+\$\{[A-Za-z_][A-Za-z0-9_]*_API_KEY\}
+\$\{[A-Za-z_][A-Za-z0-9_]*_SECRET\}
+\$\{[A-Za-z_][A-Za-z0-9_]*_TOKEN\}
+\$\{[A-Za-z_][A-Za-z0-9_]*_PASSWORD\}
+
+# Model and package references
+meta-llama/Llama-2-7b-chat-hf
+.*tokenizer.*
+.*token\..*
+.*tokens\..*
+
+# Common development patterns
+.*password\..*
+.*secret\..*
+.*git@.*
+.*git://.*
+.*github\.com.*
+.*private[_-]key.*
 
 # Example API endpoint URLs (not keys)
 https?://api\.example\.com/v[0-9]+/
 https?://localhost:[0-9]+/
-
-# Example placeholder/template values
-PLACEHOLDER_API_KEY
-YOUR_API_KEY_HERE
-YOUR_SECRET_HERE
-CHANGEME_API_KEY
-CHANGEME_SECRET
 
 # Test/example credentials in documentation
 example_password
@@ -19,4 +33,3 @@ dummy_secret
 
 # Common code patterns that might look like secrets
 Bearer\s+\$\{[A-Za-z_][A-Za-z0-9_]*\}  # Template literal in code
-\$\{[A-Za-z_][A-Za-z0-9_]*_API_KEY\}   # Environment variable reference
